@@ -1,4 +1,4 @@
-package com._8.assignment;
+package com.dbms.assignment;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
