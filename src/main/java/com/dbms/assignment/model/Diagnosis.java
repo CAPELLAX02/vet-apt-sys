@@ -7,14 +7,22 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "diagnosis")
+@Table(
+        name = "diagnosis",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uq_diagnosis_appointment",
+                        columnNames = "appointment_id"
+                )
+        }
+)
 public class Diagnosis {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "appointment_id", nullable = false)
     private Appointment appointment;
 
@@ -25,7 +33,11 @@ public class Diagnosis {
 
     private LocalDateTime diagnosedAt;
 
-    @OneToMany(mappedBy = "diagnosis", cascade = CascadeType.ALL)
+    @OneToMany(
+            mappedBy = "diagnosis",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     private Set<Prescription> prescriptions = new HashSet<>();
 
     public Diagnosis() {}

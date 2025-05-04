@@ -3,14 +3,22 @@ package com.dbms.assignment.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "prescriptions")
+@Table(
+        name = "prescriptions",
+        indexes = {
+                @Index(
+                        name = "idx_prescription_diagnosis",
+                        columnList = "diagnosis_id"
+                )
+        }
+)
 public class Prescription {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "diagnosis_id", nullable = false)
     private Diagnosis diagnosis;
 

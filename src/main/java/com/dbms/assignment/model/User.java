@@ -33,17 +33,28 @@ public class User {
     @JsonIgnore
     private String password;
 
+    @Column(nullable = false)
+    private String phone;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
 
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(
+            mappedBy = "owner",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     private Set<Pet> pets = new HashSet<>();
 
     @OneToMany(mappedBy = "vet")
     private Set<Appointment> appointments = new HashSet<>();
 
-    @OneToMany(mappedBy = "vet")
+    @OneToMany(
+            mappedBy = "vet",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     private Set<Specialization> specializations = new HashSet<>();
 
     public User() {}

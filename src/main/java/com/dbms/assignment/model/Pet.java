@@ -7,7 +7,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "pets")
+@Table(
+        name = "pets",
+        indexes = {
+                @Index(name = "idx_pet_owner", columnList = "owner_id")
+        }
+)
 public class Pet {
 
     @Id
@@ -25,11 +30,15 @@ public class Pet {
 
     private LocalDate birthDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
-    @OneToMany(mappedBy = "pet")
+    @OneToMany(
+            mappedBy = "pet",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     private Set<Appointment> appointments = new HashSet<>();
 
     public Pet() {}

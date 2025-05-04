@@ -6,7 +6,14 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "appointments")
+@Table(
+        name = "appointments",
+        indexes = {
+                @Index(name = "idx_appointment_vet", columnList = "vet_id"),
+                @Index(name = "idx_appointment_pet", columnList = "pet_id"),
+                @Index(name = "idx_appointment_time", columnList = "appointment_time")
+        }
+)
 public class Appointment {
 
     @Id
@@ -14,11 +21,11 @@ public class Appointment {
 
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pet_id", nullable = false)
     private Pet pet;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vet_id", nullable = false)
     private User vet;
 
@@ -26,9 +33,14 @@ public class Appointment {
     private LocalDateTime appointmentTime;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private AppointmentStatus status;
 
-    @OneToOne(mappedBy = "appointment", cascade = CascadeType.ALL)
+    @OneToOne(
+            mappedBy = "appointment",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     private Diagnosis diagnosis;
 
     public Appointment() {}
