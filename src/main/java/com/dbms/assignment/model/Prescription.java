@@ -20,4 +20,58 @@ public class Prescription {
 
     private String instructions;
 
+    public Prescription() {}
+
+    public Prescription(Long id,
+                        Diagnosis diagnosis,
+                        String medicineName,
+                        String dosage,
+                        String instructions) {
+        this.id = id;
+        this.diagnosis = diagnosis;
+        this.medicineName = medicineName;
+        this.dosage = dosage;
+        this.instructions = instructions;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Diagnosis getDiagnosis() {
+        return diagnosis;
+    }
+
+    public void setDiagnosis(Diagnosis diagnosis) {
+        this.diagnosis = diagnosis;
+    }
+
+    public String getMedicineName() {
+        return medicineName;
+    }
+
+    public void setMedicineName(String medicineName) {
+        this.medicineName = medicineName;
+    }
+
+    public String getDosage() {
+        return dosage;
+    }
+
+    public void setDosage(String dosage) {
+        this.dosage = dosage;
+    }
+
+    public String getInstructions() {
+        return instructions;
+    }
+
+    public void setInstructions(String instructions) {
+        this.instructions = instructions;
+    }
+
 }

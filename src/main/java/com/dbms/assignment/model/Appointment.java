@@ -31,4 +31,69 @@ public class Appointment {
     @OneToOne(mappedBy = "appointment", cascade = CascadeType.ALL)
     private Diagnosis diagnosis;
 
+    public Appointment() {}
+
+    public Appointment(Long id,
+                       Pet pet,
+                       User vet,
+                       LocalDateTime appointmentTime,
+                       AppointmentStatus status,
+                       Diagnosis diagnosis)
+    {
+        this.id = id;
+        this.pet = pet;
+        this.vet = vet;
+        this.appointmentTime = appointmentTime;
+        this.status = status;
+        this.diagnosis = diagnosis;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Pet getPet() {
+        return pet;
+    }
+
+    public void setPet(Pet pet) {
+        this.pet = pet;
+    }
+
+    public User getVet() {
+        return vet;
+    }
+
+    public void setVet(User vet) {
+        this.vet = vet;
+    }
+
+    public LocalDateTime getAppointmentTime() {
+        return appointmentTime;
+    }
+
+    public void setAppointmentTime(LocalDateTime appointmentTime) {
+        this.appointmentTime = appointmentTime;
+    }
+
+    public AppointmentStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(AppointmentStatus status) {
+        this.status = status;
+    }
+
+    public Diagnosis getDiagnosis() {
+        return diagnosis;
+    }
+
+    public void setDiagnosis(Diagnosis diagnosis) {
+        this.diagnosis = diagnosis;
+    }
+
 }
