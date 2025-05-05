@@ -1,8 +1,10 @@
 package com.dbms.assignment.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -40,6 +42,22 @@ public class Pet {
             orphanRemoval = true
     )
     private Set<Appointment> appointments = new HashSet<>();
+
+    @Column(name = "registered_at", nullable = false, updatable = false)
+    private LocalDateTime registeredAt;
+
+    public LocalDateTime getRegisteredAt() {
+        return registeredAt;
+    }
+
+    public void setRegisteredAt(LocalDateTime registeredAt) {
+        this.registeredAt = registeredAt;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        this.registeredAt = LocalDateTime.now();
+    }
 
     public Pet() {}
 

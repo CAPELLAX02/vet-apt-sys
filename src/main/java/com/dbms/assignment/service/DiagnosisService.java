@@ -27,8 +27,8 @@ public class DiagnosisService {
     public Diagnosis addDiagnosis(Long appointmentId, Diagnosis diagnosis) {
         Appointment appointment = appointmentRepository.findById(appointmentId).orElseThrow(() -> new RuntimeException("Appointment with id " + appointmentId + " not found"));
 
-        if (!appointment.getStatus().equals(AppointmentStatus.COMPLETED)) {
-            throw new RuntimeException("Cannot add diagnosis to an uncompleted appointment.");
+        if (appointment.getStatus() != AppointmentStatus.COMPLETED) {
+            throw new IllegalStateException("Diagnosis can only be added to completed appointments.");
         }
 
         diagnosis.setAppointment(appointment);

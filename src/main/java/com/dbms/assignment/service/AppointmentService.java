@@ -32,11 +32,18 @@ public class AppointmentService {
     public Appointment createAppointment(Long petId, Long vetId, LocalDateTime time) {
         Pet pet = petRepository.findById(petId).orElseThrow(() -> new RuntimeException("Pet with id " + petId + " not found"));
         User vet = userRepository.findById(vetId).orElseThrow(() -> new RuntimeException("User with id " + vetId + " not found"));
+
+        boolean exists = appointmentRepository.existsByVetAndAppointmentTime(vet, time);
+        if (exists) {
+            throw new RuntimeException("This vet already has an appointment at this time.");
+        }
+
         Appointment appointment = new Appointment();
         appointment.setPet(pet);
         appointment.setVet(vet);
         appointment.setAppointmentTime(time);
         appointment.setStatus(AppointmentStatus.PENDING);
+
         return appointmentRepository.save(appointment);
     }
 

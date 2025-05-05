@@ -4,6 +4,7 @@ import com.dbms.assignment.model.enums.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,7 +31,6 @@ public class User {
     private String email;
 
     @Column(nullable = false)
-    @JsonIgnore
     private String password;
 
     @Column(nullable = false)
@@ -45,6 +45,7 @@ public class User {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
+    @JsonIgnore
     private Set<Pet> pets = new HashSet<>();
 
     @OneToMany(mappedBy = "vet")
@@ -57,12 +58,21 @@ public class User {
     )
     private Set<Specialization> specializations = new HashSet<>();
 
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
+
     public User() {}
 
     public User(Long id,
                 String name,
                 String email,
                 String password,
+                String phone,
                 Role role,
                 Set<Pet> pets,
                 Set<Appointment> appointments,
@@ -72,6 +82,7 @@ public class User {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.phone = phone;
         this.role = role;
         this.pets = pets;
         this.appointments = appointments;
@@ -108,6 +119,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public Role getRole() {

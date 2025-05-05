@@ -1,7 +1,9 @@
 package com.dbms.assignment.controller;
 
-import com.dbms.assignment.model.Pet;
+import com.dbms.assignment.dto.PetRequestDTO;
+import com.dbms.assignment.dto.PetResponseDTO;
 import com.dbms.assignment.service.PetService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,27 +19,25 @@ public class PetController {
         this.petService = petService;
     }
 
-    @PostMapping("/owner/{ownerId}")
-    public ResponseEntity<Pet> createPet(@PathVariable Long ownerId, @RequestBody Pet pet) {
-        return ResponseEntity.ok(petService.createPet(pet, ownerId));
-    }
-
-    @GetMapping("/owner/{ownerId}")
-    public ResponseEntity<Set<Pet>> getPetsByOwner(@PathVariable Long ownerId) {
-        return ResponseEntity.ok(petService.getPetsByOwner(ownerId));
+    @PostMapping
+    public ResponseEntity<PetResponseDTO> createPet(@RequestBody PetRequestDTO dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(petService.createPet(dto));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Pet> getPet(@PathVariable Long id) {
-        return petService.getPetById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<PetResponseDTO> getPetById(@PathVariable Long id) {
+        return ResponseEntity.ok(petService.getPetById(id));
+    }
+
+    @GetMapping("/owner/{ownerId}")
+    public ResponseEntity<Set<PetResponseDTO>> getPetsByOwner(@PathVariable Long ownerId) {
+        return ResponseEntity.ok(petService.getPetsByOwnerId(ownerId));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePet(@PathVariable Long id) {
+    public ResponseEntity<String> deletePet(@PathVariable Long id) {
         petService.deletePetById(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Pet deleted successfully");
     }
 
 }

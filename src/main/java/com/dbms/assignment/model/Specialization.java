@@ -5,13 +5,20 @@ import jakarta.persistence.*;
 @Entity
 @Table(
         name = "specializations",
-        indexes = {
-                @Index(
-                        name = "idx_specialization_vet",
-                        columnList = "vet_id"
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uq_vet_specialization",
+                        columnNames = {
+                                "vet_id",
+                                "title"
+                        }
                 )
+        },
+        indexes = {
+                @Index(name = "idx_specialization_vet", columnList = "vet_id")
         }
 )
+
 public class Specialization {
 
     @Id

@@ -8,12 +8,22 @@ import java.time.LocalDateTime;
 @Entity
 @Table(
         name = "appointments",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uq_vet_time",
+                        columnNames = {
+                                "vet_id",
+                                "appointment_time"
+                        }
+                )
+        },
         indexes = {
                 @Index(name = "idx_appointment_vet", columnList = "vet_id"),
                 @Index(name = "idx_appointment_pet", columnList = "pet_id"),
                 @Index(name = "idx_appointment_time", columnList = "appointment_time")
         }
 )
+
 public class Appointment {
 
     @Id
@@ -42,6 +52,15 @@ public class Appointment {
             orphanRemoval = true
     )
     private Diagnosis diagnosis;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
+
 
     public Appointment() {}
 
