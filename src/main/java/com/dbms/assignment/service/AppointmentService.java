@@ -1,5 +1,7 @@
 package com.dbms.assignment.service;
 
+import com.dbms.assignment.dto.AppointmentResponse;
+import com.dbms.assignment.dto.CreateAppointmentRequest;
 import com.dbms.assignment.model.Appointment;
 import com.dbms.assignment.model.Pet;
 import com.dbms.assignment.model.User;
@@ -9,7 +11,6 @@ import com.dbms.assignment.repository.PetRepository;
 import com.dbms.assignment.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -29,29 +30,45 @@ public class AppointmentService {
         this.userRepository = userRepository;
     }
 
-    public Appointment createAppointment(Long petId, Long vetId, LocalDateTime time) {
-        Pet pet = petRepository.findById(petId).orElseThrow(() -> new RuntimeException("Pet with id " + petId + " not found"));
-        User vet = userRepository.findById(vetId).orElseThrow(() -> new RuntimeException("User with id " + vetId + " not found"));
+    public AppointmentResponse createAppointment(CreateAppointmentRequest request) {
+        Pet pet = petRepository.findById(request.petId())
+                .orElseThrow(() -> new RuntimeException("Pet not found"));
+        User vet = userRepository.findById(request.vetId())
+                .orElseThrow(() -> new RuntimeException("Vet not found"));
 
-        boolean exists = appointmentRepository.existsByVetAndAppointmentTime(vet, time);
-        if (exists) {
+        if (appointmentRepository.existsByVetAndAppointmentTime(vet, request.appointmentTime())) {
             throw new RuntimeException("This vet already has an appointment at this time.");
         }
 
         Appointment appointment = new Appointment();
         appointment.setPet(pet);
         appointment.setVet(vet);
-        appointment.setAppointmentTime(time);
+        appointment.setAppointmentTime(request.appointmentTime());
         appointment.setStatus(AppointmentStatus.PENDING);
 
-        return appointmentRepository.save(appointment);
+        Appointment saved = appointmentRepository.save(appointment);
+
+        return mapToDto(saved);
     }
 
-    public Set<Appointment> getAppointmentsForVet(Long vetId) {
+    public Set<AppointmentResponse> getAppointmentsForVet(Long vetId) {
         return appointmentRepository.findAll()
                 .stream()
-                .filter(appointment -> appointment.getVet().getId().equals(vetId))
+                .filter(a -> a.getVet().getId().equals(vetId))
+                .map(this::mapToDto)
                 .collect(Collectors.toSet());
+    }
+
+    private AppointmentResponse mapToDto(Appointment appointment) {
+        return new AppointmentResponse(
+                appointment.getId(),
+                appointment.getPet().getId(),
+                appointment.getVet().getId(),
+                appointment.getVet().getName(),
+                appointment.getPet().getName(),
+                appointment.getStatus().name(),
+                appointment.getAppointmentTime()
+        );
     }
 
     public void cancelAppointmentById(Long appointmentId) {
@@ -64,6 +81,12 @@ public class AppointmentService {
         Appointment appointment = appointmentRepository.findById(appointmentId).orElseThrow(() -> new RuntimeException("Appointment with id " + appointmentId + " not found"));
         appointment.setStatus(AppointmentStatus.COMPLETED);
         appointmentRepository.save(appointment);
+    }
+
+    public AppointmentResponse getAppointmentById(Long appointmentId) {
+        Appointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new RuntimeException("Appointment with id " + appointmentId + " not found"));
+        return mapToDto(appointment);
     }
 
 }

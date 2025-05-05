@@ -1,12 +1,11 @@
 package com.dbms.assignment.controller;
 
-import com.dbms.assignment.model.Appointment;
+import com.dbms.assignment.dto.AppointmentResponse;
+import com.dbms.assignment.dto.CreateAppointmentRequest;
 import com.dbms.assignment.service.AppointmentService;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.Set;
 
 @RestController
@@ -20,27 +19,25 @@ public class AppointmentController {
     }
 
     @PostMapping
-    public ResponseEntity<Appointment> createAppointment(@RequestParam Long petId,
-                                                         @RequestParam Long vetId,
-                                                         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime time) {
-        return ResponseEntity.ok(appointmentService.createAppointment(petId, vetId, time));
+    public ResponseEntity<AppointmentResponse> create(@RequestBody CreateAppointmentRequest req) {
+        return ResponseEntity.ok(appointmentService.createAppointment(req));
     }
 
     @GetMapping("/vet/{vetId}")
-    public ResponseEntity<Set<Appointment>> getAppointmentsForVet(@PathVariable Long vetId) {
+    public ResponseEntity<Set<AppointmentResponse>> getForVet(@PathVariable Long vetId) {
         return ResponseEntity.ok(appointmentService.getAppointmentsForVet(vetId));
     }
 
     @PutMapping("/{id}/cancel")
-    public ResponseEntity<Void> cancelAppointment(@PathVariable Long id) {
+    public ResponseEntity<AppointmentResponse> cancel(@PathVariable Long id) {
         appointmentService.cancelAppointmentById(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(appointmentService.getAppointmentById(id));
     }
 
     @PutMapping("/{id}/complete")
-    public ResponseEntity<Void> completeAppointment(@PathVariable Long id) {
+    public ResponseEntity<AppointmentResponse> complete(@PathVariable Long id) {
         appointmentService.completeAppointmentById(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(appointmentService.getAppointmentById(id));
     }
 
 }
