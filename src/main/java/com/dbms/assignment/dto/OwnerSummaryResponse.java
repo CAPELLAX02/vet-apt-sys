@@ -1,6 +1,6 @@
 package com.dbms.assignment.dto;
 
-public record OwnerSummaryDTO(
+public record OwnerSummaryResponse(
         Long id,
         String name,
         String email,

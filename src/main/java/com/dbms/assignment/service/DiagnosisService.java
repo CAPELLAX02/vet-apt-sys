@@ -104,4 +104,12 @@ public class DiagnosisService {
                 .collect(Collectors.toSet());
     }
 
+    public void deleteDiagnosisById(Long id) {
+        if (diagnosisRepository.existsById(id)) {
+            diagnosisRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("Diagnosis with id " + id + " not found");
+        }
+    }
+
 }

@@ -33,4 +33,10 @@ public class DiagnosisController {
         return ResponseEntity.ok(diagnosisService.getDiagnosisByPet(petId));
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteDiagnosis(@PathVariable Long id) {
+        diagnosisService.deleteDiagnosisById(id);
+        return ResponseEntity.ok("Diagnosis has been deleted.");
+    }
+
 }

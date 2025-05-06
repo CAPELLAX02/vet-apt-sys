@@ -2,7 +2,7 @@ package com.dbms.assignment.dto;
 
 import java.time.LocalDate;
 
-public record PetSummary(
+public record PetSummaryResponse(
         Long id,
         String name,
         String species,

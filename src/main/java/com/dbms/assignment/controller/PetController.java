@@ -1,7 +1,7 @@
 package com.dbms.assignment.controller;
 
-import com.dbms.assignment.dto.PetRequestDTO;
-import com.dbms.assignment.dto.PetResponseDTO;
+import com.dbms.assignment.dto.CreatePetRequest;
+import com.dbms.assignment.dto.PetResponseResponse;
 import com.dbms.assignment.service.PetService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,17 +20,17 @@ public class PetController {
     }
 
     @PostMapping
-    public ResponseEntity<PetResponseDTO> createPet(@RequestBody PetRequestDTO dto) {
+    public ResponseEntity<PetResponseResponse> createPet(@RequestBody CreatePetRequest dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(petService.createPet(dto));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PetResponseDTO> getPetById(@PathVariable Long id) {
+    public ResponseEntity<PetResponseResponse> getPetById(@PathVariable Long id) {
         return ResponseEntity.ok(petService.getPetById(id));
     }
 
     @GetMapping("/owner/{ownerId}")
-    public ResponseEntity<Set<PetResponseDTO>> getPetsByOwner(@PathVariable Long ownerId) {
+    public ResponseEntity<Set<PetResponseResponse>> getPetsByOwner(@PathVariable Long ownerId) {
         return ResponseEntity.ok(petService.getPetsByOwnerId(ownerId));
     }
 

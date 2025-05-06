@@ -19,25 +19,36 @@ public class AppointmentController {
     }
 
     @PostMapping
-    public ResponseEntity<AppointmentResponse> create(@RequestBody CreateAppointmentRequest req) {
+    public ResponseEntity<AppointmentResponse> createAppointment(@RequestBody CreateAppointmentRequest req) {
         return ResponseEntity.ok(appointmentService.createAppointment(req));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<AppointmentResponse> getAppointmentById(@PathVariable Long id) {
+        return ResponseEntity.ok(appointmentService.getAppointmentById(id));
+    }
+
     @GetMapping("/vet/{vetId}")
-    public ResponseEntity<Set<AppointmentResponse>> getForVet(@PathVariable Long vetId) {
+    public ResponseEntity<Set<AppointmentResponse>> getAppointmentsForVet(@PathVariable Long vetId) {
         return ResponseEntity.ok(appointmentService.getAppointmentsForVet(vetId));
     }
 
     @PutMapping("/{id}/cancel")
-    public ResponseEntity<AppointmentResponse> cancel(@PathVariable Long id) {
+    public ResponseEntity<AppointmentResponse> cancelAppointment(@PathVariable Long id) {
         appointmentService.cancelAppointmentById(id);
         return ResponseEntity.ok(appointmentService.getAppointmentById(id));
     }
 
     @PutMapping("/{id}/complete")
-    public ResponseEntity<AppointmentResponse> complete(@PathVariable Long id) {
+    public ResponseEntity<AppointmentResponse> completeAppointment(@PathVariable Long id) {
         appointmentService.completeAppointmentById(id);
         return ResponseEntity.ok(appointmentService.getAppointmentById(id));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteAppointment(@PathVariable Long id) {
+        appointmentService.deleteAppointmentById(id);
+        return ResponseEntity.ok("Appointment has been deleted.");
     }
 
 }

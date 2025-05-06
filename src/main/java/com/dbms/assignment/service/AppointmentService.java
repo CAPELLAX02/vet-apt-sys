@@ -2,8 +2,8 @@ package com.dbms.assignment.service;
 
 import com.dbms.assignment.dto.AppointmentResponse;
 import com.dbms.assignment.dto.CreateAppointmentRequest;
-import com.dbms.assignment.dto.PetSummary;
-import com.dbms.assignment.dto.VetSummary;
+import com.dbms.assignment.dto.PetSummaryResponse;
+import com.dbms.assignment.dto.VetSummaryResponse;
 import com.dbms.assignment.model.Appointment;
 import com.dbms.assignment.model.Pet;
 import com.dbms.assignment.model.User;
@@ -58,7 +58,7 @@ public class AppointmentService {
                 .filter(app -> app.getVet().getId().equals(vetId))
                 .map(app -> new AppointmentResponse(
                         app.getId(),
-                        new PetSummary(
+                        new PetSummaryResponse(
                                 app.getPet().getId(),
                                 app.getPet().getName(),
                                 app.getPet().getSpecies(),
@@ -66,7 +66,7 @@ public class AppointmentService {
                                 app.getPet().getGender(),
                                 app.getPet().getBirthDate()
                         ),
-                        new VetSummary(
+                        new VetSummaryResponse(
                                 app.getVet().getId(),
                                 app.getVet().getName(),
                                 app.getVet().getEmail(),
@@ -82,7 +82,7 @@ public class AppointmentService {
     private AppointmentResponse mapToDto(Appointment a) {
         return new AppointmentResponse(
                 a.getId(),
-                new PetSummary(
+                new PetSummaryResponse(
                         a.getPet().getId(),
                         a.getPet().getName(),
                         a.getPet().getSpecies(),
@@ -90,7 +90,7 @@ public class AppointmentService {
                         a.getPet().getGender(),
                         a.getPet().getBirthDate()
                 ),
-                new VetSummary(
+                new VetSummaryResponse(
                         a.getVet().getId(),
                         a.getVet().getName(),
                         a.getVet().getEmail(),
@@ -117,6 +117,14 @@ public class AppointmentService {
         Appointment appointment = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new RuntimeException("Appointment with id " + appointmentId + " not found"));
         return mapToDto(appointment);
+    }
+
+    public void deleteAppointmentById(Long id) {
+        if (appointmentRepository.existsById(id)) {
+            appointmentRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("Appointment with id " + id + " not found");
+        }
     }
 
 }

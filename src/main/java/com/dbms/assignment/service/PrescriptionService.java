@@ -66,7 +66,11 @@ public class PrescriptionService {
     }
 
     public void deletePrescriptionById(Long id) {
-        prescriptionRepository.deleteById(id);
+        if (prescriptionRepository.existsById(id)) {
+            prescriptionRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("Prescription with id " + id + " is not found");
+        }
     }
 
 }

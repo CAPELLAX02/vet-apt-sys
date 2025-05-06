@@ -3,7 +3,7 @@ package com.dbms.assignment.dto;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public record PetResponseDTO(
+public record PetResponseResponse(
         Long id,
         String name,
         String species,
@@ -11,6 +11,6 @@ public record PetResponseDTO(
         String gender,
         LocalDate birthDate,
         LocalDateTime registeredAt,
-        OwnerSummaryDTO owner
+        OwnerSummaryResponse owner
 ) {
 }

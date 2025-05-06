@@ -1,8 +1,8 @@
 package com.dbms.assignment.service;
 
-import com.dbms.assignment.dto.OwnerSummaryDTO;
-import com.dbms.assignment.dto.PetRequestDTO;
-import com.dbms.assignment.dto.PetResponseDTO;
+import com.dbms.assignment.dto.OwnerSummaryResponse;
+import com.dbms.assignment.dto.CreatePetRequest;
+import com.dbms.assignment.dto.PetResponseResponse;
 import com.dbms.assignment.model.Pet;
 import com.dbms.assignment.model.User;
 import com.dbms.assignment.repository.PetRepository;
@@ -25,7 +25,7 @@ public class PetService {
         this.userRepository = userRepository;
     }
 
-    public PetResponseDTO createPet(PetRequestDTO dto) {
+    public PetResponseResponse createPet(CreatePetRequest dto) {
         User owner = userRepository.findById(dto.ownerId())
                 .orElseThrow(() -> new RuntimeException("Owner not found"));
 
@@ -41,28 +41,28 @@ public class PetService {
         return mapToDTO(saved);
     }
 
-    public PetResponseDTO getPetById(Long id) {
+    public PetResponseResponse getPetById(Long id) {
         Pet pet = petRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Pet not found"));
         return mapToDTO(pet);
     }
 
-    public Set<PetResponseDTO> getPetsByOwnerId(Long ownerId) {
+    public Set<PetResponseResponse> getPetsByOwnerId(Long ownerId) {
         return petRepository.findAll().stream()
                 .filter(p -> p.getOwner().getId().equals(ownerId))
                 .map(this::mapToDTO)
                 .collect(Collectors.toSet());
     }
 
-    private PetResponseDTO mapToDTO(Pet pet) {
-        OwnerSummaryDTO owner = new OwnerSummaryDTO(
+    private PetResponseResponse mapToDTO(Pet pet) {
+        OwnerSummaryResponse owner = new OwnerSummaryResponse(
                 pet.getOwner().getId(),
                 pet.getOwner().getName(),
                 pet.getOwner().getEmail(),
                 pet.getOwner().getPhone()
         );
 
-        return new PetResponseDTO(
+        return new PetResponseResponse(
                 pet.getId(),
                 pet.getName(),
                 pet.getSpecies(),
@@ -75,7 +75,11 @@ public class PetService {
     }
 
     public void deletePetById(Long id) {
-        petRepository.deleteById(id);
+        if (petRepository.existsById(id)) {
+            petRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("Pet with id " + id + " not found");
+        }
     }
 
 }
