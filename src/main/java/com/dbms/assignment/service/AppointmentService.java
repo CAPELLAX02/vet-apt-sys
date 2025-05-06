@@ -2,6 +2,8 @@ package com.dbms.assignment.service;
 
 import com.dbms.assignment.dto.AppointmentResponse;
 import com.dbms.assignment.dto.CreateAppointmentRequest;
+import com.dbms.assignment.dto.PetSummary;
+import com.dbms.assignment.dto.VetSummary;
 import com.dbms.assignment.model.Appointment;
 import com.dbms.assignment.model.Pet;
 import com.dbms.assignment.model.User;
@@ -52,22 +54,50 @@ public class AppointmentService {
     }
 
     public Set<AppointmentResponse> getAppointmentsForVet(Long vetId) {
-        return appointmentRepository.findAll()
-                .stream()
-                .filter(a -> a.getVet().getId().equals(vetId))
-                .map(this::mapToDto)
+        return appointmentRepository.findAll().stream()
+                .filter(app -> app.getVet().getId().equals(vetId))
+                .map(app -> new AppointmentResponse(
+                        app.getId(),
+                        new PetSummary(
+                                app.getPet().getId(),
+                                app.getPet().getName(),
+                                app.getPet().getSpecies(),
+                                app.getPet().getBreed(),
+                                app.getPet().getGender(),
+                                app.getPet().getBirthDate()
+                        ),
+                        new VetSummary(
+                                app.getVet().getId(),
+                                app.getVet().getName(),
+                                app.getVet().getEmail(),
+                                app.getVet().getPhone()
+                        ),
+                        app.getAppointmentTime(),
+                        app.getStatus().name()
+                ))
                 .collect(Collectors.toSet());
     }
 
-    private AppointmentResponse mapToDto(Appointment appointment) {
+
+    private AppointmentResponse mapToDto(Appointment a) {
         return new AppointmentResponse(
-                appointment.getId(),
-                appointment.getPet().getId(),
-                appointment.getVet().getId(),
-                appointment.getVet().getName(),
-                appointment.getPet().getName(),
-                appointment.getStatus().name(),
-                appointment.getAppointmentTime()
+                a.getId(),
+                new PetSummary(
+                        a.getPet().getId(),
+                        a.getPet().getName(),
+                        a.getPet().getSpecies(),
+                        a.getPet().getBreed(),
+                        a.getPet().getGender(),
+                        a.getPet().getBirthDate()
+                ),
+                new VetSummary(
+                        a.getVet().getId(),
+                        a.getVet().getName(),
+                        a.getVet().getEmail(),
+                        a.getVet().getPhone()
+                ),
+                a.getAppointmentTime(),
+                a.getStatus().name()
         );
     }
 

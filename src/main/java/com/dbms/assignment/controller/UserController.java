@@ -1,6 +1,6 @@
 package com.dbms.assignment.controller;
 
-import com.dbms.assignment.model.User;
+import com.dbms.assignment.dto.UserResponse;
 import com.dbms.assignment.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,22 +21,22 @@ public class UserController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Set<User>> getAllUsers() {
+    public ResponseEntity<Set<UserResponse>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
     @GetMapping("/vets")
-    public ResponseEntity<Set<User>> getVets() {
+    public ResponseEntity<Set<UserResponse>> getVets() {
         return ResponseEntity.ok(userService.getVets());
     }
 
     @GetMapping("/owners")
-    public ResponseEntity<Set<User>> getOwners() {
+    public ResponseEntity<Set<UserResponse>> getOwners() {
         return ResponseEntity.ok(userService.getOwners());
     }
 

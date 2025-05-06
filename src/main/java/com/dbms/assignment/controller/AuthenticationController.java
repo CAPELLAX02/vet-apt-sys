@@ -1,9 +1,9 @@
 package com.dbms.assignment.controller;
 
 import com.dbms.assignment.dto.RegisterRequest;
+import com.dbms.assignment.dto.UserResponse;
 import com.dbms.assignment.model.User;
 import com.dbms.assignment.repository.UserRepository;
-import com.dbms.assignment.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,11 +17,9 @@ import java.util.LinkedHashMap;
 @RequestMapping("/auth")
 public class AuthenticationController {
 
-    private final UserService userService;
     private final UserRepository userRepository;
 
-    public AuthenticationController(UserService userService, UserRepository userRepository) {
-        this.userService = userService;
+    public AuthenticationController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -45,14 +43,23 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody LinkedHashMap<String, String> loginPayload) {
+    public ResponseEntity<UserResponse> login(@RequestBody LinkedHashMap<String, String> loginPayload) {
         String email = loginPayload.get("email");
         String password = loginPayload.get("password");
 
-        return userRepository.findByEmail(email)
-                .filter(user -> user.getPassword().equals(password))
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+        User user = userRepository.findByEmail(email)
+                .filter(u -> u.getPassword().equals(password))
+                .orElseThrow(() -> new RuntimeException("Invalid username or password"));
+
+        UserResponse res = new UserResponse(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getPhone(),
+                user.getRole()
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 
 }

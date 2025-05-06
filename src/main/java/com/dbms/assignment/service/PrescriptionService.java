@@ -1,5 +1,7 @@
 package com.dbms.assignment.service;
 
+import com.dbms.assignment.dto.PrescriptionRequest;
+import com.dbms.assignment.dto.PrescriptionResponse;
 import com.dbms.assignment.model.Diagnosis;
 import com.dbms.assignment.model.Prescription;
 import com.dbms.assignment.repository.DiagnosisRepository;
@@ -22,28 +24,49 @@ public class PrescriptionService {
         this.diagnosisRepository = diagnosisRepository;
     }
 
-    public Prescription addPrescription(Long diagnosisId, Prescription prescription) {
-        Diagnosis diagnosis = diagnosisRepository.findById(diagnosisId)
-                .orElseThrow(() -> new RuntimeException("Diagnosis with id " + diagnosisId + " not found"));
+    public PrescriptionResponse addPrescription(PrescriptionRequest req) {
+        Diagnosis diagnosis = diagnosisRepository.findById(req.diagnosisId())
+                .orElseThrow(() -> new RuntimeException("Diagnosis not found"));
 
+        Prescription prescription = new Prescription();
         prescription.setDiagnosis(diagnosis);
-        return prescriptionRepository.save(prescription);
+        prescription.setMedicineName(req.medicineName());
+        prescription.setDosage(req.dosage());
+        prescription.setInstructions(req.instructions());
+
+        Prescription saved = prescriptionRepository.save(prescription);
+
+        return new PrescriptionResponse(saved.getId(), saved.getMedicineName(), saved.getDosage(), saved.getInstructions());
     }
 
-    public Set<Prescription> getPrescriptionsByDiagnosisId(Long diagnosisId) {
-        return prescriptionRepository.findAll()
-                .stream()
-                .filter(prescription -> prescription.getDiagnosis().getId().equals(diagnosisId))
+    public Set<PrescriptionResponse> getPrescriptionsByDiagnosisId(Long diagnosisId) {
+        Diagnosis diagnosis = diagnosisRepository.findById(diagnosisId)
+                .orElseThrow(() -> new RuntimeException("Diagnosis not found"));
+
+        return diagnosis.getPrescriptions().stream()
+                .map(p -> new PrescriptionResponse(
+                        p.getId(),
+                        p.getMedicineName(),
+                        p.getDosage(),
+                        p.getInstructions()
+                ))
                 .collect(Collectors.toSet());
     }
 
-    public void deletePrescriptionById(Long prescriptionId) {
-        prescriptionRepository.deleteById(prescriptionId);
+    public PrescriptionResponse getPrescriptionById(Long id) {
+        Prescription prescription = prescriptionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Prescription with id " + id + " is not found"));
+
+        return new PrescriptionResponse(
+                prescription.getId(),
+                prescription.getMedicineName(),
+                prescription.getDosage(),
+                prescription.getInstructions()
+        );
     }
 
-    public Prescription getPrescriptionById(Long prescriptionId) {
-        return prescriptionRepository.findById(prescriptionId)
-                .orElseThrow(() -> new RuntimeException("Prescription with id " + prescriptionId + " not found"));
+    public void deletePrescriptionById(Long id) {
+        prescriptionRepository.deleteById(id);
     }
 
 }
