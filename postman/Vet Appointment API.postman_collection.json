@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Ahmet Atar\",\n    \"email\": \"ahmtatar@gmail.com\",\n    \"password\": \"123456\",\n    \"phone\": \"+905318811876\",\n    \"role\": \"OWNER\"\n}",
+							"raw": "{\n    \"name\": \"Ahmet Tutar\",\n    \"email\": \"ahmtatar2@gmail.com\",\n    \"password\": \"123456\",\n    \"phone\": \"+905318811876\",\n    \"role\": \"VET\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -45,7 +45,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"ahmtatar@gmail.com\",\n    \"password\": \"123456\"\n}",
+							"raw": "{\n    \"email\": \"ahmtatar2@gmail.com\",\n    \"password\": \"123456\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -542,26 +542,6 @@
 						}
 					},
 					"response": []
-				},
-				{
-					"name": "Delete Diagnosis",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/diagnoses/2",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"diagnoses",
-								"2"
-							]
-						}
-					},
-					"response": []
 				}
 			]
 		},
@@ -636,22 +616,157 @@
 						}
 					},
 					"response": []
-				},
+				}
+			]
+		},
+		{
+			"name": "Specialization",
+			"item": [
 				{
-					"name": "Delete Prescription",
+					"name": "Add Specialization",
 					"request": {
-						"method": "DELETE",
+						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"vetId\": 2,\n    \"title\": \"Hearth Surgery\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "http://localhost:8080/prescriptions/1",
+							"raw": "http://localhost:8080/specializations",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"prescriptions",
-								"1"
+								"specializations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Specialization for Vet",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"vetId\": 1,\n    \"title\": \"Brain Surgery\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/specializations/vet/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"specializations",
+								"vet",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Specializations",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"vetId\": 1,\n    \"title\": \"Brain Surgery\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/specializations",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"specializations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Specialization",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"vetId\": 1,\n    \"title\": \"Brain Surgery\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/specializations/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"specializations",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Specialization",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"vetId\": 1,\n    \"title\": \"Brain Surgery\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/specializations/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"specializations",
+								"2"
 							]
 						}
 					},
