@@ -15,6 +15,23 @@ services:
     networks:
       - vet_network
 
+  springboot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: vet_backend
+    entrypoint: ["/bin/sh", "-c", "sleep 15 && java -jar app.jar"]
+    depends_on:
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://vet_mysql:3306/vet_db
+      SPRING_DATASOURCE_USERNAME: vet
+      SPRING_DATASOURCE_PASSWORD: vet
+    ports:
+      - "8080:8080"
+    networks:
+      - vet_network
+
 volumes:
   mysql_data:
 
